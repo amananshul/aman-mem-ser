@@ -1,6 +1,8 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import { Novu } from '@novu/node';
 
+const novu = new Novu('bde4ee89e8c50bd71d541a510d000e50')
 import PostMessage from '../models/postMessage.js';
 
 const router = express.Router();
@@ -66,13 +68,26 @@ export const createPost = async (req, res) => {
 
     try {
         await newPostMessage.save();
-
+        sendInAppNotification(newPostMessage)
         res.status(201).json(newPostMessage);
     } catch (error) {
         res.status(409).json({ message: error.message });
     }
 }
-
+async function sendInAppNotification(userDetails) {
+    await novu.trigger('in-app', {
+      to: {
+        subscriberId: '66323277868b8f1418e12f53',
+      },
+      payload: {
+        name: userDetails.name,
+        message: userDetails.title,
+      },
+      
+    });
+  
+    return res.json({ finish: true });
+  }
 export const updatePost = async (req, res) => {
     const { id } = req.params;
     const { title, message, creator, selectedFile, tags } = req.body;

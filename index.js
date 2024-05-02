@@ -10,6 +10,7 @@ const app=express()
 app.use(bodyParser.json({limit:'30mb',extended:true}))
 app.use(bodyParser.urlencoded({limit:'30mb',extended:true}))
 app.use(cors())
+
 dotenv.config()
 app.use('/posts',postRoutes)
 app.use('/user',userRoutes)
@@ -19,7 +20,7 @@ app.use('/user',userRoutes)
 
 
 const CONNECTION_URL = 'mongodb+srv://aman04anshul:amanbhai@cluster0.4jfrjfj.mongodb.net/';
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
 mongoose.connect(process.env.CONNECTION_URL, {
   useNewUrlParser: true,
